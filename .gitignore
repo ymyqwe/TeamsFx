@@ -380,3 +380,7 @@ diffFiles.txt
 
 # mocha
 mochawesome-report
+
+# mustache
+mustache-output
+packages/extra-shot-mocha/src/email-reporter/*.html

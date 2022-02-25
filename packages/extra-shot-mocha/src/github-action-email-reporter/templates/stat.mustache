@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .row {
+        margin: 0 -5px;
+      }
+
+      /* Clear floats after the columns */
+      .row:after {
+        content: "";
+        display: table;
+        clear: both;
+      }
+
+      /* Responsive columns */
+      @media screen and (max-width: 400px) {
+        .column {
+          width: 100%;
+          display: block;
+          margin-bottom: 10px;
+        }
+      }
+
+      /* Style the counter cards */
+      .card {
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+        padding: 2px;
+        text-align: center;
+        background-color: white;
+        color: grey;
+      }
+
+      .fa {
+        font-size: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="row">
+      <div class="column">
+        <div class="card">
+          <p><i class="fa fa-list"></i></p>
+          <h3>Total {{ total_cases }} Cases</h3>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <p><i class="fa fa-clock-o"></i></p>
+          <h3>Cost {{ total_duration }}</h3>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="card">
+          <p><i class="fa fa-calendar"></i></p>
+          <h3>Executed at {{ calendar }}</h3>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
