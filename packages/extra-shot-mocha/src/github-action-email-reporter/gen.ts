@@ -93,7 +93,6 @@ async function gen() {
 
   console.log(templateData);
 
-  /*
   const browser = await puppeteer.launch();
 
   await ensureDir(join(__dirname, TargetFolder));
@@ -103,7 +102,7 @@ async function gen() {
     const name = t.replace(TemplateSuffix, "");
     const path = join(__dirname, TemplateFolder, t);
     const rawTemplate = (await readFile(path)).toString();
-    const rendered = render(rawTemplate, data);
+    const rendered = render(rawTemplate, templateData);
     const htmlPath = join(__dirname, TargetFolder, `${name}.html`);
     await writeFile(htmlPath, rendered);
 
@@ -123,7 +122,6 @@ async function gen() {
   }
 
   await browser.close();
-  */
 }
 
 gen()
