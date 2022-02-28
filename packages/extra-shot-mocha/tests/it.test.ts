@@ -1,18 +1,16 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { describe, suite } from "mocha";
+import { describe } from "mocha";
 import { expect } from "chai";
 import { it } from "../src/it";
-import addContext from "mochawesome/addContext";
 
-describe("Advanced it tests", () => {
+describe("Advanced it tests", async () => {
   it("should run with only title");
 
   it("should run as normal mocha.it with sync function", function () {
     expect(1).equals(1);
   });
-  addContext(this, "");
 
   it("should run as normal mocha.it with async function", async function () {
     expect(1).equals(1);
