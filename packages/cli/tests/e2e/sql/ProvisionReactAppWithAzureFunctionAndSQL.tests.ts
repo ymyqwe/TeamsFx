@@ -29,6 +29,7 @@ describe("Provision to Azure with SQL", function () {
   const projectPath = path.resolve(testFolder, appName);
 
   it(`Provision react app with Azure Function and SQL`, async function () {
+    console.log("[dilin-debug] start test case: Provision react app with Azure Function and SQL");
     // new a project ( tab + function + sql )
     await CliHelper.createProjectWithCapability(
       appName,
