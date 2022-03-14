@@ -3,7 +3,7 @@
 import * as path from "path";
 import { ConfigFolderName, FxError, SystemError, UserError } from "@microsoft/teamsfx-api";
 
-import { FunctionPluginPathInfo as PathInfo } from "../constants";
+import { AzureInfo, FunctionPluginPathInfo as PathInfo } from "../constants";
 import { Logger } from "../utils/logger";
 import { getLocalizedString } from "../../../../common/localizeUtils";
 
@@ -39,6 +39,9 @@ export const tips = {
     "plugins.function.checkFunctionExtVersion",
     path.join(PathInfo.solutionFolderName, PathInfo.functionExtensionsFileName)
   ),
+  registerRequiredRP: `Register ${AzureInfo.requiredResourceProviders.join(
+    ","
+  )} resource provider for your subscription manually.`,
 };
 
 export class FunctionPluginError extends Error {
@@ -155,6 +158,41 @@ export class InstallTeamsFxBindingError extends FunctionPluginError {
       "InstallTeamsFxBindingError",
       getLocalizedString("error.function.InstallTeamsFxBindingError"),
       [tips.checkFunctionExtVersion]
+    );
+  }
+}
+
+export class RegisterResourceProviderError extends FunctionPluginError {
+  constructor() {
+    super(
+      ErrorType.User,
+      "RegisterResourceProviderError",
+      "Failed to register required resource provider for function app.",
+      [tips.registerRequiredRP, tips.checkLog]
+    );
+  }
+}
+
+export class ProvisionError extends FunctionPluginError {
+  constructor(resource: string, innerErrorCode?: string) {
+    super(
+      ErrorType.User,
+      "ProvisionError",
+      `Failed to check/create '${resource}' for function app${
+        innerErrorCode ? `: ${innerErrorCode}` : ""
+      }.`,
+      [tips.checkSubscriptionId, tips.checkCredit, tips.checkNetwork, tips.retryRequest]
+    );
+  }
+}
+
+export class GetConnectionStringError extends FunctionPluginError {
+  constructor() {
+    super(
+      ErrorType.System,
+      "GetConnectionStringError",
+      "Failed to get connection string of Azure Storage account.",
+      [tips.recreateStorageAccount, tips.checkNetwork, tips.retryRequest]
     );
   }
 }
