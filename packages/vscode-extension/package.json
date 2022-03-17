@@ -5,7 +5,7 @@
   "version": "3.6.0-rc.0",
   "publisher": "TeamsDevApp",
   "author": "Microsoft Corporation",
-  "icon": "media/teams.png",
+  "icon": "images/teams.png",
   "main": "./out/src/extension.js",
   "repository": {
     "type": "git",
@@ -40,7 +40,6 @@
     "out/**/*"
   ],
   "activationEvents": [
-    "*",
     "onCommand:fx-extension.openWelcome",
     "onCommand:fx-extension.openSamples",
     "onCommand:fx-extension.openDocument",
@@ -76,7 +75,7 @@
         {
           "id": "teamsfx",
           "title": "Teams Toolkit",
-          "icon": "media/teams.svg"
+          "icon": "images/teams.svg"
         }
       ]
     },
@@ -130,8 +129,7 @@
         },
         {
           "id": "teamsfx-help-and-feedback",
-          "name": "Help and feedback",
-          "when": "fx-extension.sidebarWelcome.treeview"
+          "name": "Help and feedback"
         },
         {
           "id": "teamsfx-empty-project",
@@ -879,7 +877,7 @@
             "title": "Get your environment ready",
             "description": "Teams Toolkit requires several prerequisites. Prepare your Teams app development environment before you start.\n[Run prerequisite checker](command:fx-extension.validate-getStarted-prerequisites?%5B%22WalkThrough%22%5D)",
             "media": {
-              "svg": "media/Prerequisites.svg",
+              "svg": "images/Prerequisites.svg",
               "altText": "Get your environment ready"
             }
           },
@@ -888,7 +886,7 @@
             "title": "Build your first Teams app",
             "description": "Choose [Teams app capabilities](https://aka.ms/teamsfx-capabilities-overview) and build your first Teams app.\nYou can create it from the scratch or explore our samples to help you quickly get started with the real-world examples and code structures.\n[Create a new Teams app](command:fx-extension.getNewProjectPath?%5B%22WalkThrough%22%5D)\n[View samples](command:fx-extension.openSamples?%5B%22WalkThrough%22%5D)",
             "media": {
-              "svg": "media/Create.svg",
+              "svg": "images/Create.svg",
               "altText": "Build your first Teams app"
             }
           },
@@ -897,7 +895,7 @@
             "title": "Preview your Teams app locally",
             "description": "Press [F5](command:fx-extension.selectAndDebug?%5B%22WalkThrough%22%5D) or discover '[Run and Debug](command:workbench.view.debug)' panel on the activity bar, and click the play icon to locally preview your app in Teams context.\n[Run local preview (F5)](command:fx-extension.selectAndDebug?%5B%22WalkThrough%22%5D)\n__Tip: To run local preview, sign in to M365 (organizational account) with sideloading option.__",
             "media": {
-              "svg": "media/F5.svg",
+              "svg": "images/F5.svg",
               "altText": "Preview your Teams app locally"
             }
           },
@@ -906,7 +904,7 @@
             "title": "Deploy Teams apps",
             "description": "You can provision resources in the cloud and deploy your app's code to the provisioned resources. Finally, distribute your first app to Teams.\n[Open Deployment commands](command:fx-extension.openDeploymentTreeview?%5B%22WalkThrough%22%5D)\n__Tip: Learn more about ['Deployment'](https://aka.ms/teamsfx-provision).__",
             "media": {
-              "svg": "media/Deployment.svg",
+              "svg": "images/Deployment.svg",
               "altText": "Deploy Teams apps"
             }
           },
@@ -915,7 +913,7 @@
             "title": "Explore more TeamsFx functionalities",
             "description": "What's next? Explore and discover more about Teams Toolkit functionalities with our README.md and [Documentation](https://aka.ms/teamsfx-landing-doc).\nA few highlighted features: \n • Use [TeamsFx Command Line Interface (CLI)](https://aka.ms/teamsfx-toolkit-cli) to increase productivity\n • Manage [multiple environments](https://aka.ms/teamsfx-treeview-environment) and [collaborate with others](https://aka.ms/teamsfx-collaboration)\n • Customize resource provision with [ARM templates](https://aka.ms/teamsfx-arm-templates)\n[Open README](command:fx-extension.openReadMe?%5B%22WalkThrough%22%2Ctrue%5D)",
             "media": {
-              "svg": "media/Readme.svg",
+              "svg": "images/Readme.svg",
               "altText": "Explore more"
             }
           }

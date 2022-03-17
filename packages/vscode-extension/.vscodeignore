@@ -15,7 +15,14 @@ build/**
 webpack.config.js
 .github
 node_modules
-!out/templates/**
 coverage
 .coverconfig.json
 img/**
+media/**
+docs/**
+scripts/**
+.eslint*
+.prettier*
+out/resource/**
+out/src/tree.js
+out/src/client.js
