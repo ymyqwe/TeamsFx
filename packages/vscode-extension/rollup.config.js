@@ -6,6 +6,7 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import typescriptPlugin from "rollup-plugin-typescript2";
 import typescript from "typescript";
 import { terser } from "rollup-plugin-terser";
+import { visualizer } from "rollup-plugin-visualizer";
 
 const es2017Plugins = [
   typescriptPlugin({
@@ -15,7 +16,9 @@ const es2017Plugins = [
   nodeResolve(),
   commonjs(),
   json(),
-  terser(),
+  visualizer({
+    template: "sunburst",
+  }),
 ];
 
 export default defineConfig({
@@ -23,7 +26,7 @@ export default defineConfig({
   output: {
     file: "dist/extension.js",
     format: "commonjs",
-    sourcemap: false,
+    sourcemap: true,
   },
   plugins: [...es2017Plugins],
   external: ["vscode"],
