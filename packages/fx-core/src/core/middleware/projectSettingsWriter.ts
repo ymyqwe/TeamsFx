@@ -28,6 +28,12 @@ export const ProjectSettingsWriterMW: Middleware = async (
   next: NextFunction
 ) => {
   await next();
+
+  // skip persist project settings if error occurred.
+  if (ctx.result?.isErr() === true) {
+    return;
+  }
+
   if (!shouldIgnored(ctx)) {
     const lastArg = ctx.arguments[ctx.arguments.length - 1];
     const inputs: Inputs = lastArg === ctx ? ctx.arguments[ctx.arguments.length - 2] : lastArg;

@@ -55,6 +55,12 @@ export class PathNotExistError extends UserError {
   }
 }
 
+export class FileExistError extends UserError {
+  constructor(filePath: string) {
+    super(new.target.name, getLocalizedString("error.FileExistError", filePath), CoreSource);
+  }
+}
+
 export class InvalidProjectError extends UserError {
   constructor(msg?: string) {
     super(new.target.name, getLocalizedString("error.InvalidProjectError", msg || ""), CoreSource);
