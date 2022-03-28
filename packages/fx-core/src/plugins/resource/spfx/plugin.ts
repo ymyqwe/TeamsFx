@@ -1,3 +1,4 @@
+import { SpfxPlugin } from "./../localdebug/constants";
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 import {
@@ -84,6 +85,8 @@ export class SPFxPluginImpl {
 
         const webpartDescription = ctx.answers![SPFXQuestionNames.webpart_desp] as string;
         const framework = ctx.answers![SPFXQuestionNames.framework_type] as string;
+        const componentType = ctx.answers![SPFXQuestionNames.component_type] as string;
+        const aceType = ctx.answers![SPFXQuestionNames.ace_type] as string;
         const solutionName = ctx.projectSettings?.appName as string;
         if (ctx.answers?.platform === Platform.VSCode) {
           (ctx.logProvider as any).outputChannel.show();
@@ -103,17 +106,15 @@ export class SPFxPluginImpl {
           "--skip-install",
           "true",
           "--component-type",
-          "webpart",
+          componentType,
           "--component-description",
           webpartDescription,
+          "--aceTemplateType",
+          aceType,
           "--component-name",
           webpartName,
-          "--framework",
-          framework,
           "--solution-name",
           solutionName,
-          "--environment",
-          "spo",
           "--skip-feature-deployment",
           "true",
           "--is-domain-isolated",
@@ -125,28 +126,28 @@ export class SPFxPluginImpl {
         await fs.rename(currentPath, newPath);
 
         await progressHandler?.next(ScaffoldProgressMessage.UpdateManifest);
-        const manifestPath = `${newPath}/src/webparts/${componentNameCamelCase}/${componentName}WebPart.manifest.json`;
-        const manifest = await fs.readFile(manifestPath, "utf8");
-        let manifestString = manifest.toString();
-        manifestString = manifestString.replace(
-          `"supportedHosts": ["SharePointWebPart"]`,
-          `"supportedHosts": ["SharePointWebPart", "TeamsPersonalApp", "TeamsTab"]`
-        );
-        await fs.writeFile(manifestPath, manifestString);
+        // const manifestPath = `${newPath}/src/webparts/${componentNameCamelCase}/${componentName}WebPart.manifest.json`;
+        // const manifest = await fs.readFile(manifestPath, "utf8");
+        // let manifestString = manifest.toString();
+        // manifestString = manifestString.replace(
+        //   `"supportedHosts": ["SharePointWebPart"]`,
+        //   `"supportedHosts": ["SharePointWebPart", "TeamsPersonalApp", "TeamsTab"]`
+        // );
+        // await fs.writeFile(manifestPath, manifestString);
 
         // remove dataVersion() function, related issue: https://github.com/SharePoint/sp-dev-docs/issues/6469
-        const webpartFile = `${newPath}/src/webparts/${componentNameCamelCase}/${componentName}WebPart.ts`;
-        const codeFile = await fs.readFile(webpartFile, "utf8");
-        let codeString = codeFile.toString();
-        codeString = codeString.replace(
-          `  protected get dataVersion(): Version {\r\n    return Version.parse('1.0');\r\n  }\r\n\r\n`,
-          ``
-        );
-        codeString = codeString.replace(
-          `import { Version } from '@microsoft/sp-core-library';\r\n`,
-          ``
-        );
-        await fs.writeFile(webpartFile, codeString);
+        // const webpartFile = `${newPath}/src/webparts/${componentNameCamelCase}/${componentName}WebPart.ts`;
+        // const codeFile = await fs.readFile(webpartFile, "utf8");
+        // let codeString = codeFile.toString();
+        // codeString = codeString.replace(
+        //   `  protected get dataVersion(): Version {\r\n    return Version.parse('1.0');\r\n  }\r\n\r\n`,
+        //   ``
+        // );
+        // codeString = codeString.replace(
+        //   `import { Version } from '@microsoft/sp-core-library';\r\n`,
+        //   ``
+        // );
+        // await fs.writeFile(webpartFile, codeString);
 
         // remove .vscode
         const debugPath = `${newPath}/.vscode`;
