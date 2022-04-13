@@ -1,3 +1,4 @@
+import { SpfxPlugin } from "./../localdebug/constants";
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 import {
@@ -56,6 +57,8 @@ import { convert2Context } from "../utils4v2";
 import { yeomanScaffoldEnabled } from "../../../core/globalVars";
 import { getLocalizedString } from "../../../common/localizeUtils";
 import { YoChecker } from "./depsChecker/yoChecker";
+import { GeneratorChecker } from "./depsChecker/generatorChecker";
+import { cpUtils } from "../../solution/fx-solution/utils/depsChecker/cpUtils";
 
 export class SPFxPluginImpl {
   public async postScaffold(ctx: PluginContext): Promise<Result<any, FxError>> {
@@ -74,43 +77,77 @@ export class SPFxPluginImpl {
         if (yoRes.isErr()) {
           throw DependencyInstallError("yo");
         }
+        const spGeneratorChecker = new GeneratorChecker(ctx.logProvider!);
+        const spGeneratorRes = await spGeneratorChecker.ensureDependency(ctx);
+        if (spGeneratorRes.isErr()) {
+          throw DependencyInstallError("sharepoint generator");
+        }
 
         const webpartDescription = ctx.answers![SPFXQuestionNames.webpart_desp] as string;
         const framework = ctx.answers![SPFXQuestionNames.framework_type] as string;
+        const componentType = ctx.answers![SPFXQuestionNames.component_type] as string;
+        const aceType = ctx.answers![SPFXQuestionNames.ace_type] as string;
         const solutionName = ctx.projectSettings?.appName as string;
-        const command = `yo @microsoft/sharepoint --skip-install true --component-type webpart --component-description ${webpartDescription} --component-name ${webpartName} --framework ${framework} --solution-name ${solutionName} --environment spo --skip-feature-deployment true --is-domain-isolated false`;
         if (ctx.answers?.platform === Platform.VSCode) {
           (ctx.logProvider as any).outputChannel.show();
         }
-        await Utils.execute(command, "SPFx", ctx.root, ctx.logProvider, true);
+
+        const yoEnv: NodeJS.ProcessEnv = process.env;
+        yoEnv.PATH = `${yoChecker.getBinFolder()}${path.delimiter}${process.env.PATH ?? ""}`;
+        await cpUtils.executeCommand(
+          ctx.root,
+          ctx.logProvider,
+          {
+            timeout: 2 * 60 * 1000,
+            env: yoEnv,
+          },
+          "yo",
+          spGeneratorChecker.getSpGeneratorPath(),
+          "--skip-install",
+          "true",
+          "--component-type",
+          componentType,
+          "--component-description",
+          webpartDescription,
+          "--aceTemplateType",
+          aceType,
+          "--component-name",
+          webpartName,
+          "--solution-name",
+          solutionName,
+          "--skip-feature-deployment",
+          "true",
+          "--is-domain-isolated",
+          "false"
+        );
 
         const currentPath = path.join(ctx.root, solutionName);
         const newPath = path.join(ctx.root, "SPFx");
         await fs.rename(currentPath, newPath);
 
         await progressHandler?.next(ScaffoldProgressMessage.UpdateManifest);
-        const manifestPath = `${newPath}/src/webparts/${componentNameCamelCase}/${componentName}WebPart.manifest.json`;
-        const manifest = await fs.readFile(manifestPath, "utf8");
-        let manifestString = manifest.toString();
-        manifestString = manifestString.replace(
-          `"supportedHosts": ["SharePointWebPart"]`,
-          `"supportedHosts": ["SharePointWebPart", "TeamsPersonalApp", "TeamsTab"]`
-        );
-        await fs.writeFile(manifestPath, manifestString);
+        // const manifestPath = `${newPath}/src/webparts/${componentNameCamelCase}/${componentName}WebPart.manifest.json`;
+        // const manifest = await fs.readFile(manifestPath, "utf8");
+        // let manifestString = manifest.toString();
+        // manifestString = manifestString.replace(
+        //   `"supportedHosts": ["SharePointWebPart"]`,
+        //   `"supportedHosts": ["SharePointWebPart", "TeamsPersonalApp", "TeamsTab"]`
+        // );
+        // await fs.writeFile(manifestPath, manifestString);
 
         // remove dataVersion() function, related issue: https://github.com/SharePoint/sp-dev-docs/issues/6469
-        const webpartFile = `${newPath}/src/webparts/${componentNameCamelCase}/${componentName}WebPart.ts`;
-        const codeFile = await fs.readFile(webpartFile, "utf8");
-        let codeString = codeFile.toString();
-        codeString = codeString.replace(
-          `  protected get dataVersion(): Version {\r\n    return Version.parse('1.0');\r\n  }\r\n\r\n`,
-          ``
-        );
-        codeString = codeString.replace(
-          `import { Version } from '@microsoft/sp-core-library';\r\n`,
-          ``
-        );
-        await fs.writeFile(webpartFile, codeString);
+        // const webpartFile = `${newPath}/src/webparts/${componentNameCamelCase}/${componentName}WebPart.ts`;
+        // const codeFile = await fs.readFile(webpartFile, "utf8");
+        // let codeString = codeFile.toString();
+        // codeString = codeString.replace(
+        //   `  protected get dataVersion(): Version {\r\n    return Version.parse('1.0');\r\n  }\r\n\r\n`,
+        //   ``
+        // );
+        // codeString = codeString.replace(
+        //   `import { Version } from '@microsoft/sp-core-library';\r\n`,
+        //   ``
+        // );
+        // await fs.writeFile(webpartFile, codeString);
 
         // remove .vscode
         const debugPath = `${newPath}/.vscode`;

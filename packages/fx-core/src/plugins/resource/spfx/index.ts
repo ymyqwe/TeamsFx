@@ -24,7 +24,10 @@ import {
   SPFXQuestionNames,
   webpartDescriptionQuestion,
   webpartNameQuestion,
+  aceTypeQuestion,
+  componentTypeQuestion,
 } from "./utils/questions";
+import { yeomanScaffoldEnabled } from "../../../core/globalVars";
 import { telemetryHelper } from "./utils/telemetry-helper";
 import "./v2";
 import "./v3";
@@ -46,8 +49,16 @@ export class SpfxPlugin implements Plugin {
     });
 
     if (stage === Stage.create) {
-      const spfx_framework_type = new QTreeNode(frameworkQuestion);
-      spfx_frontend_host.addChild(spfx_framework_type);
+      if (yeomanScaffoldEnabled()) {
+        const componet_type = new QTreeNode(componentTypeQuestion);
+        spfx_frontend_host.addChild(componet_type);
+
+        const ace_type = new QTreeNode(aceTypeQuestion);
+        spfx_frontend_host.addChild(ace_type);
+      }
+
+      // const spfx_framework_type = new QTreeNode(frameworkQuestion);
+      // spfx_frontend_host.addChild(spfx_framework_type);
 
       const spfx_webpart_name = new QTreeNode(webpartNameQuestion);
       spfx_frontend_host.addChild(spfx_webpart_name);
